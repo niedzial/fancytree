@@ -1,3 +1,14 @@
+# icon-opts / Unreleased
+  * Refactored custom icon configuration:
+    * [Added] options.icon option/callback.
+    * [Added] node icon option.
+    * [Deprecated] options.iconClass callback: use `icon` instead
+    * [Deprecated] options.icons: use `icon` instead
+    * [Deprecated] node `iconclass` option: use `icon` instead
+  * Refactored custom checkbox configuration:
+    * [Added] node `checkbox` option
+    * [Deprecated] node `hideCheckbox` option: use `checkbox=true` instead
+
 # 2.12.1-0 / Unreleased
   *
 
@@ -16,7 +27,7 @@
   * [Fixed] #475 Font color while editing node title with bootstrap skin
   * [Fixed] #484 Glyph plugin: Missing margin-left for span.fancytree-custom-icon
   * [Fixed] #486 node.render(true) moves the node to the end of the list
-  * [Fixed] #489 `focusOnClick` option is ignored for tables, if 'dnd' is listed after 'table' extension
+  * [Fixed] #489 `focusOnClick` option is ignored for tables if 'dnd' is listed after 'table' extension
   * [Fixed] #495 Double clicking on expander with lazy-load causes assertion error
 
 # 2.11.0 / 2015-07-26

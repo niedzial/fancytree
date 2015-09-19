@@ -210,6 +210,7 @@ function _makeNodeTitleStartMatcher(s){
 
 var i,
 	FT = null, // initialized below
+	TEST_IMG = new RegExp(/\.|\//),  // strings are considered image urls if they conatin '.' or '/'
 	ENTITY_MAP = {"&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;", "/": "&#x2F;"},
 	IGNORE_KEYCODES = { 16: true, 17: true, 18: true },
 	SPECIAL_KEYCODES = {
@@ -3091,14 +3092,13 @@ $.extend(Fancytree.prototype,
 	 */
 	nodeRenderTitle: function(ctx, title) {
 		// set node connector images, links and text
-		var id, iconSpanClass, nodeTitle, role, tabindex, tooltip,
+		var id, icon, nodeTitle, role, tabindex, tooltip,
 			node = ctx.node,
 			tree = ctx.tree,
 			opts = ctx.options,
 			aria = opts.aria,
 			level = node.getLevel(),
-			ares = [],
-			iconSrc = node.data.icon;
+			ares = [];
 
 		if(title !== undefined){
 			node.title = title;
@@ -3138,21 +3138,42 @@ $.extend(Fancytree.prototype,
 			}
 		}
 		// folder or doctype icon
-		role = aria ? " role='img'" : "";
-		if( iconSrc === true || (iconSrc !== false && opts.icons !== false) ) {
-			// opts.icons defines the default behavior, node.icon == true/false can override this
-			if ( iconSrc && typeof iconSrc === "string" ) {
-				// node.icon is an image url
-				iconSrc = (iconSrc.charAt(0) === "/") ? iconSrc : ((opts.imagePath || "") + iconSrc);
-				ares.push("<img src='" + iconSrc + "' class='fancytree-icon' alt='' />");
+		if( node.data.iconClass !== undefined ) {  // 2015-09-16
+			if( node.data.icon ) {
+				$.error("'iconClass' node option is deprecated since v2.13.0: use 'icon' only instead");
 			} else {
-				// See if node.iconclass or opts.iconClass() define a class name
-				iconSpanClass = (opts.iconClass && opts.iconClass.call(tree, {type: "iconClass"}, ctx)) || node.data.iconclass || null;
-				if( iconSpanClass ) {
-					ares.push("<span " + role + " class='fancytree-custom-icon " + iconSpanClass +  "'></span>");
+				node.warn("'iconClass' node option is deprecated since v2.13.0: use 'icon' instead");
+				node.data.icon = node.data.iconClass;
+			}
+		}
+		icon = node.data.icon;
+		if( icon != null ) {
+			if( typeof icon !== "boolean" ) {
+				// node.data.icon is defined, but not true/false: must be a string
+				icon = "" + icon;
+			}
+		} else if( opts.icon != null) {
+			icon = opts.icon;
+			if( typeof icon !== "boolean" ) {
+				// opts.icon is defined, but not true/false: must be a callback
+				icon = icon.call(tree, {type: "icon"}, ctx);
+			}
+		} else {
+			icon = true;
+		}
+		if( icon !== false ) {
+			role = aria ? " role='img'" : "";
+			if ( typeof icon === "string" ) {
+				if( TEST_IMG.test(icon) ) {
+					// node.icon is an image url. Prepend imagePath
+					icon = (icon.charAt(0) === "/") ? icon : ((opts.imagePath || "") + icon);
+					ares.push("<img src='" + icon + "' class='fancytree-icon' alt='' />");
 				} else {
-					ares.push("<span " + role + " class='fancytree-icon'></span>");
+					ares.push("<span " + role + " class='fancytree-custom-icon " + icon +  "'></span>");
 				}
+			} else {
+				// standard icon: theme css will take care of this
+				ares.push("<span " + role + " class='fancytree-icon'></span>");
 			}
 		}
 
@@ -3856,7 +3877,7 @@ $.widget("ui.fancytree",
 		// toggleEffect: { effect: "slide", options: {direction: "up"}, duration: 200 },
 		toggleEffect: { effect: "blind", options: {direction: "vertical", scale: "box"}, duration: 200 },
 		generateIds: false,
-		icons: true,
+		icon: true,
 		idPrefix: "ft_",
 		focusOnSelect: false,
 		keyboard: true,
@@ -3901,7 +3922,8 @@ $.widget("ui.fancytree",
 			: this.element.find(">ul:first");
 		// Subclass Fancytree instance with all enabled extensions
 		var extension, extName, i,
-			extensions = this.options.extensions,
+			opts = this.options,
+			extensions = opts.extensions,
 			base = this.tree;
 
 		for(i=0; i<extensions.length; i++){
@@ -3921,6 +3943,23 @@ $.widget("ui.fancytree",
 			_subclassObject(this.tree, base, extension, extName);
 			// current extension becomes base for the next extension
 			base = extension;
+		}
+		// 
+		if( opts.icons !== undefined ) {  // 2015-09-16
+			if( opts.icon !== true ) {
+				$.error("'icons' tree option is deprecated since v2.13.0: use 'icon' only instead");
+			} else {
+				this.tree.warn("'icons' tree option is deprecated since v2.13.0: use 'icon' instead");
+				opts.icon = opts.icons;
+			}
+		}
+		if( opts.iconClass !== undefined ) {  // 2015-09-16
+			if( opts.icon ) {
+				$.error("'iconClass' tree option is deprecated since v2.13.0: use 'icon' only instead");
+			} else {
+				this.tree.warn("'iconClass' tree option is deprecated since v2.13.0: use 'icon' instead");
+				opts.icon = opts.iconClass;
+			}
 		}
 		//
 		this.tree._callHook("treeCreate", this.tree);
@@ -3944,7 +3983,7 @@ $.widget("ui.fancytree",
 		switch( key ) {
 		case "aria":
 		case "checkbox":
-		case "icons":
+		case "icon":
 		case "minExpandLevel":
 		case "tabbable":
 //		case "nolink":

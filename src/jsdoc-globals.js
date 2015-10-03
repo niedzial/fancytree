@@ -56,18 +56,19 @@ var EventData = {};
  * @name NodeData
  * @type {Object}
  *
- * @property {Boolean} active (Initialization only, but will not be stored  with the node.)
- * @property {Boolean} checkbox Pass `false` to remove checkbox for this node.<br>
- *     Note that selection via the API or initialization data is still possible.
+ * @property {Boolean} active (Initialization only, but will not be stored with the node.)
  * @property {NodeData[]} children Optional array of child nodes.<br>
- *     Note that for lazy nodes, a value of null or undefined is interpreted as
- *     <i>not yet loaded</i>; pass an empty array to define a leaf node.
+ *     Note that for <i>lazy</i> nodes, a value of null or undefined is interpreted as
+ *     <i>not yet loaded</i>; if an array is passed (even an empty one), the 
+ *     node is considered <i>loaded</i> which will effectively disable the 
+ *     lazy-behavior.
  * @property {object} data All unknown properties from constructor will be copied to `node.data`.
  * @property {Boolean} expanded Initial expansion state. Use `node.setExpanded()` or `node.isExpanded()` to access.
  * @property {String} extraClasses Class names added to the node markup (separate with space).
  * @property {Boolean} focus (Initialization only, but will not be stored  with the node.)
  * @property {Boolean} folder Folders have different default icons and honor the `clickFolderMode` option.
- * @property {Boolean} <del>hideCheckbox</del> @deprecated Use checkbox=false instead
+ * @property {Boolean} hideCheckbox Pass `true` to remove checkbox for this node.<br>
+ *     Note that selection via the API or initialization data is still possible.
  * @property {Boolean|String} icon Define this node's icon.<br>
  *     undefined: Use global tree option of the same name<br>
  *     true: Use default icon, depending on `node.folder` and `node.expanded` status<br>

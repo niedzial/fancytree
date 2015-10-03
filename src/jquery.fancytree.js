@@ -231,7 +231,7 @@ var i,
 	CLASS_ATTRS = "active expanded focus folder hideCheckbox lazy selected unselectable".split(" "),
 	CLASS_ATTR_MAP = {},
 	//	Top-level Fancytree node attributes, that can be set by dict
-	NODE_ATTRS = "expanded extraClasses folder hideCheckbox key lazy refKey selected title tooltip unselectable".split(" "),
+	NODE_ATTRS = "expanded extraClasses folder hideCheckbox icon key lazy refKey selected title tooltip unselectable".split(" "),
 	NODE_ATTR_MAP = {},
 	// Attribute names that should NOT be added to node.data
 	NONE_NODE_DATA_MAP = {"active": true, "children": true, "data": true, "focus": true};
@@ -3139,17 +3139,17 @@ $.extend(Fancytree.prototype,
 		}
 		// folder or doctype icon
 		if( node.data.iconClass !== undefined ) {  // 2015-09-16
-			if( node.data.icon ) {
+			if( node.icon ) {
 				$.error("'iconClass' node option is deprecated since v2.13.0: use 'icon' only instead");
 			} else {
 				node.warn("'iconClass' node option is deprecated since v2.13.0: use 'icon' instead");
-				node.data.icon = node.data.iconClass;
+				node.icon = node.data.iconClass;
 			}
 		}
-		icon = node.data.icon;
+		icon = node.icon;
 		if( icon != null ) {
 			if( typeof icon !== "boolean" ) {
-				// node.data.icon is defined, but not true/false: must be a string
+				// node.icon is defined, but not true/false: must be a string
 				icon = "" + icon;
 			}
 		} else if( opts.icon != null) {

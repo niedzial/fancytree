@@ -1,13 +1,17 @@
 # icon-opts / Unreleased
-  * Refactored custom icon configuration:
-    * [Added] options.icon option/callback.
-    * [Added] node icon option.
-    * [Deprecated] options.iconClass callback: use `icon` instead
-    * [Deprecated] options.icons: use `icon` instead
-    * [Deprecated] node `iconclass` option: use `icon` instead
-  * Refactored custom checkbox configuration:
-    * [Added] node `checkbox` option
-    * [Deprecated] node `hideCheckbox` option: use `checkbox=true` instead
+  * [CHANGED] Refactored custom icon configuration:
+
+    * [Added] `options.icon` option/callback.<br>
+      Valid values are true, false, a string containing a class name or image
+      url, or a callback returning that.
+    * [Changed] `node.icon` option. Valid values are true, false, or a string 
+      containing a class name or image url.<br>
+      This option existed before, but was stored in the `node.data.icon` namespace,
+      and did not accept class names.
+    * [Deprecated] `options.iconClass` callback: use `options.icon` instead
+    * [Deprecated] `options.icons`: use `options.icon` instead
+    * [Deprecated] `node.data.iconclass` option: use `node.icon` instead
+    * [Deprecated] `node.data.icon` option: use `node.icon` instead
 
 # 2.12.1-0 / Unreleased
   *

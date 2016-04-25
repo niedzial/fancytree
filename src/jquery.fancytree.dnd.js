@@ -410,7 +410,11 @@ $.ui.fancytree.registerExtension({
 			} else {
 				if( dnd.smartRevert ) {
 					// #567: fix revert position
-					rect = node.li.getBoundingClientRect();
+					if (node.li != null) {
+						rect = node.li.getBoundingClientRect();
+					} else {
+						rect = node.span.getBoundingClientRect();
+					}
 					parentRect = $(draggable.options.appendTo)[0].getBoundingClientRect();
 					draggable.originalPosition.left = Math.max(0, rect.left - parentRect.left);
 					draggable.originalPosition.top = Math.max(0, rect.top - parentRect.top);
